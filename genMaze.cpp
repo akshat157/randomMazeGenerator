@@ -39,6 +39,11 @@ void createMaze(int M, int N, char** maze) {
 
     vector < pair<int, pair<int, int> > > cell_list;
     vector <bool> visited(m*n, false);
+    stack<pair<int, pair<int, int> > > m_stack;
+    random_device rdev;
+    mt19937 rng(rdev());
+    uniform_int_distribution<mt19937::result_type> dist100(1, 100);
+
     int nVisited = 0;
     int k = 0;
 
@@ -49,16 +54,10 @@ void createMaze(int M, int N, char** maze) {
         }
     }
 
-    stack<pair<int, pair<int, int> > > m_stack;
-
-    m_stack.push(cell_list[0]);
-
-    visited[0] = true;
+    int randIdx = dist100(rng) % m*n;
+    m_stack.push(cell_list[randIdx]);
+    visited[randIdx] = true;
     nVisited++;
-    
-    random_device rdev;
-    mt19937 rng(rdev());
-    uniform_int_distribution<mt19937::result_type> dist20(1, 20);
 
     // Algo
     while(nVisited < m*n) {
@@ -95,7 +94,7 @@ void createMaze(int M, int N, char** maze) {
         // Neighbours available?
         if (!neighbours.empty()) {
             // Choose a random direction
-            int next_cell_dir = neighbours[dist20(rng) % neighbours.size()];
+            int next_cell_dir = neighbours[dist100(rng) % neighbours.size()];
             // Create a path between this cell and neighbour
             switch (next_cell_dir) {
                 case 0: // North
